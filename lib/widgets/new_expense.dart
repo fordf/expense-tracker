@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/models/expense.dart';
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.onAddNewExpense});
+
+  final void Function(Expense) onAddNewExpense;
 
   @override
-  // ignore: no_logic_in_create_state
   State<StatefulWidget> createState() {
     return _NewExpenseState();
   }
@@ -33,26 +34,37 @@ class _NewExpenseState extends State<NewExpense> {
   }
 
   void _submitExpenseData() {
+    final submittedTitle = _titleController.text.trim();
     final submittedAmount = double.tryParse(_amountController.text);
     final amountIsInvalid = submittedAmount == null || submittedAmount <= 0;
-    if (_titleController.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate == null) {
+    if (submittedTitle.isEmpty || amountIsInvalid || _selectedDate == null) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text('Invalid input'),
-          content: const Text('Please make sure a valid title, amount, and category was entered.'),
+          content: const Text(
+              'Please make sure a valid title, amount, and category was entered.'),
           actions: [
-            TextButton(onPressed: () {
-              Navigator.pop(ctx);
-            }, child: const Text('Okay'))
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            )
           ],
         ),
       );
       return;
     }
-    
+
+    widget.onAddNewExpense(Expense(
+      title: submittedTitle,
+      amount: submittedAmount,
+      date: _selectedDate!,
+      category: _selectedCategory,
+    ));
+
+    Navigator.pop(context);
   }
 
   @override
@@ -65,7 +77,7 @@ class _NewExpenseState extends State<NewExpense> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
       child: Column(
         children: [
           TextField(
