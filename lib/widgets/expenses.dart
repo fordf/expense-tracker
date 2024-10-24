@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/widgets/new_expense.dart';
 import 'package:flutter/material.dart';
@@ -36,9 +38,24 @@ class _ExpensesState extends State<Expenses> {
   }
 
   void _removeExpense(Expense expense) {
+    final index = _expenses.indexOf(expense);
     setState(() {
       _expenses.remove(expense);
     });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${expense.title} removed'),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'undo',
+          onPressed: () {
+            setState(() {
+              _expenses.insert(index, expense);
+            });
+          },
+        ),
+      ),
+    );
   }
 
   void _openAddExpenseOverlay() {
@@ -65,10 +82,14 @@ class _ExpensesState extends State<Expenses> {
         children: [
           const Text('chart'),
           Expanded(
-            child: ExpensesList(
-              expenses: _expenses,
-              onRemoveExpense: _removeExpense,
-            ),
+            child: _expenses.isEmpty
+                ? const Center(
+                    child: Text('No expenses yet! Start spending!'),
+                  )
+                : ExpensesList(
+                    expenses: _expenses,
+                    onRemoveExpense: _removeExpense,
+                  ),
           ),
         ],
       ),
