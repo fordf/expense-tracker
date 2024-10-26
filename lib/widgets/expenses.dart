@@ -1,9 +1,8 @@
-import 'dart:math';
+import 'package:flutter/material.dart';
 
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/widgets/new_expense.dart';
-import 'package:flutter/material.dart';
-
+import 'package:expense_tracker/widgets/chart/chart.dart';
 import 'package:expense_tracker/models/expense.dart';
 
 class Expenses extends StatefulWidget {
@@ -42,12 +41,13 @@ class _ExpensesState extends State<Expenses> {
     setState(() {
       _expenses.remove(expense);
     });
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${expense.title} removed'),
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
-          label: 'undo',
+          label: 'Undo',
           onPressed: () {
             setState(() {
               _expenses.insert(index, expense);
@@ -80,7 +80,7 @@ class _ExpensesState extends State<Expenses> {
       ),
       body: Column(
         children: [
-          const Text('chart'),
+          Chart(expenses: _expenses),
           Expanded(
             child: _expenses.isEmpty
                 ? const Center(
