@@ -1,6 +1,6 @@
+import 'package:expense_tracker/widgets/home/expenses_scaffold.dart';
 import 'package:flutter/material.dart';
 
-import 'package:expense_tracker/widgets/expenses.dart';
 
 var kColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromARGB(255, 77, 13, 225),
@@ -71,7 +71,7 @@ void main() {
         ),
       ),
       themeMode: ThemeMode.system,
-      home: const Expenses(),
+      home: const ExpensesScaffold(),
     ),
   );
 }
