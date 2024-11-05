@@ -16,18 +16,22 @@ class Expenses extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Chart(expenses: expenses),
-        Expanded(
-          child: expenses.isEmpty
-              ? const Center(
-                  child: Text('No expenses yet! Start spending!'),
-                )
-              : ExpensesList(
-                  expenses: expenses, onRemoveExpense: onRemoveExpense),
-        ),
-      ],
-    );
+    final isLandscape = MediaQuery.of(context).size.width > 600;
+    final children = [
+      isLandscape
+          ? Expanded(child: Chart(expenses: expenses))
+          : Chart(expenses: expenses),
+      Expanded(
+        child: expenses.isEmpty
+            ? const Center(
+                child: Text('No expenses yet! Start spending!'),
+              )
+            : ExpensesList(
+                expenses: expenses,
+                onRemoveExpense: onRemoveExpense,
+              ),
+      ),
+    ];
+    return isLandscape ? Row(children: children) : Column(children: children);
   }
 }
