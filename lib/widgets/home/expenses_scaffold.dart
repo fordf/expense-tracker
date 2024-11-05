@@ -25,7 +25,7 @@ class _ExpensesScaffoldState extends State<ExpensesScaffold> {
   @override
   void initState() {
     super.initState();
-    _expensesFuture = generateDummyExpenses();
+    _expensesFuture = generateBetterDummyExpenses();
   }
 
   void _addNewExpense(Expense newExpense) {

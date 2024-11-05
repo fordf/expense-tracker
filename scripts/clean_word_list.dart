@@ -9,14 +9,26 @@ class FileExistsException implements Exception {
 }
 
 void main() async {
+  final readFilePath = path.join(path.current, 'words_alpha.txt');
   final writeFilePath =
       path.join(path.dirname(path.current), 'assets', 'words.txt');
+  trimFile(
+    minWordLength: 4,
+    readFilePath: readFilePath,
+    writeFilePath: writeFilePath,
+  );
+}
+
+void trimFile({
+  required int minWordLength,
+  required String readFilePath,
+  required String writeFilePath,
+}) async {
   final writeFile = File(writeFilePath);
   try {
     if (writeFile.existsSync()) {
       throw (FileExistsException('File $writeFilePath already exists.'));
     }
-    final readFilePath = path.join(path.current, 'words_alpha.txt');
     final readFile = File(readFilePath);
     var sink = writeFile.openWrite();
 
@@ -26,7 +38,7 @@ void main() async {
         .transform(const LineSplitter());
 
     await for (var word in words) {
-      if (word.length > 3) {
+      if (word.length >= minWordLength) {
         sink.writeln(word);
       }
     }

@@ -13,34 +13,48 @@ DateTime randomDate() => DateTime(
       random.nextInt(27) + 1,
     );
 
-Future<List<Expense>> generateDummyExpenses() async {
+Future<Map<String, dynamic>> loadJsonFromAssets(String filePath) async {
+  String jsonString = await rootBundle.loadString(filePath);
+  return jsonDecode(jsonString);
+}
 
-  // Just to make it slower....
-  await Future.delayed(const Duration(seconds: 2), () {});
-  
-  final List<String> words = [];
-  final numWords = random.nextInt(20) + 5;
-  final lineStream = rootBundle
-      .loadString('assets/words.txt')
-      .asStream()
-      .transform(const LineSplitter())
-      .where((word) => random.nextDouble() < .00002);
-      
-  try {
-    await for (var line in lineStream) {
-      lineStream.skip(random.nextInt(40000));
-      words.add(line);
-      if (words.length >= numWords) {
-        break;
-      }
-    }
-  } catch (e) {
-    print('Error: $e');
+Future<Map<String, dynamic>> loadJsonFromAssets2(String filePath) async {
+  return rootBundle.loadStructuredData(filePath, (String s) async {
+    return json.decode(s);
+  });
+}
+
+Future<String> makePhraseWithOrder(
+    List<String> order, Map<String, dynamic> categorizedWords) async {
+  List<String> wordList = [];
+  for (final category in order) {
+    await Future.delayed(const Duration(milliseconds: 30), () {});
+    final categoryWords = categorizedWords[category]!;
+    wordList.add(categoryWords[random.nextInt(categoryWords.length)]);
   }
+  final phrase = wordList.join(" ");
+  return phrase.replaceFirst(phrase[0], phrase[0].toUpperCase());
+}
+
+Future<List<Expense>> generateBetterDummyExpenses() async {
+  final numWords = random.nextInt(20) + 5;
+  final categorizedWords = await loadJsonFromAssets2('assets/2of12id.json');
+  categorizedWords['V'].removeWhere((verb) => !verb.endsWith('ing'));
+
+  const List<List<String>> orders = [
+    ['V', 'N'],
+    ['N', 'V'],
+    ['A', 'N', 'V'],
+    ['V', 'A', 'N']
+  ];
+
   return [
-    for (final word in words)
+    for (var i = 0; i < numWords; i++)
       Expense(
-        title: word,
+        title: await makePhraseWithOrder(
+          orders[random.nextInt(orders.length)],
+          categorizedWords,
+        ),
         amount: random.nextDouble() * 20,
         date: randomDate(),
         category: Category.values[random.nextInt(Category.values.length)],
