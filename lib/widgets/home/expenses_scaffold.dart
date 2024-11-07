@@ -59,6 +59,7 @@ class _ExpensesScaffoldState extends State<ExpensesScaffold> {
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
       isScrollControlled: true,
+      useSafeArea: true,
       context: context,
       builder: (ctx) => NewExpense(onAddNewExpense: _addNewExpense),
     );
@@ -74,6 +75,7 @@ class _ExpensesScaffoldState extends State<ExpensesScaffold> {
       return Scaffold(
         appBar: appBar,
         body: expensesWidget,
+        resizeToAvoidBottomInset: false,
       );
     }
     return FutureBuilder<List<Expense>>(
@@ -100,6 +102,7 @@ class _ExpensesScaffoldState extends State<ExpensesScaffold> {
         return Scaffold(
           appBar: appBar,
           body: bodyWidget,
+          resizeToAvoidBottomInset: false,
         );
       },
     );

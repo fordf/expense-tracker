@@ -15,7 +15,6 @@ class ExpensesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('length: ${expenses.length}');
     return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (ctx, i) => Dismissible(
