@@ -25,7 +25,9 @@ Future<Map<String, dynamic>> loadJsonFromAssets2(String filePath) async {
 }
 
 Future<String> makePhraseWithOrder(
-    List<String> order, Map<String, dynamic> categorizedWords) async {
+  List<String> order,
+  Map<String, dynamic> categorizedWords,
+) async {
   List<String> wordList = [];
   for (final category in order) {
     await Future.delayed(const Duration(milliseconds: 30), () {});

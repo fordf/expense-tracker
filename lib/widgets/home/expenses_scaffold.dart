@@ -1,5 +1,5 @@
 import 'package:expense_tracker/widgets/home/error_loading.dart';
-import 'package:expense_tracker/widgets/home/new_expense.dart';
+import 'package:expense_tracker/widgets/new_expense/new_expense.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expense_tracker/data/expense_data.dart';
