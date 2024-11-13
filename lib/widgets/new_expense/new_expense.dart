@@ -139,7 +139,6 @@ class _NewExpenseState extends State<NewExpense> {
                           selectedCategory: _selectedCategory,
                           onCategorySelected: _onCategorySelected,
                         ),
-                        // const SizedBox(width: 24),
                         const Spacer(),
                         DatePicker(
                           onPressed: _presentDatePicker,

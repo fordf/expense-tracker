@@ -132,8 +132,7 @@ app.*.symbols
 
 # my stuff
 scripts/words_alpha.txt
-assets/2of12id.json
-assets/words.txt
+scripts/2of12id.json
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3

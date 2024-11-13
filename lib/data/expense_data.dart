@@ -40,14 +40,14 @@ Future<String> makePhraseWithOrder(
 
 Future<List<Expense>> generateBetterDummyExpenses() async {
   final numWords = random.nextInt(20) + 5;
-  final categorizedWords = await loadJsonFromAssets2('assets/2of12id.json');
-  categorizedWords['V'].removeWhere((verb) => !verb.endsWith('ing'));
+  final categorizedWords = await loadJsonFromAssets2('assets/categorized_words.json');
 
   const List<List<String>> orders = [
-    ['V', 'N'],
-    ['N', 'V'],
-    ['A', 'N', 'V'],
-    ['V', 'A', 'N']
+    ['verb', 'noun'],
+    ['noun', 'verb'],
+    ['verb', 'adjective', 'noun'],
+    ['adverb', 'verb'],
+    ['adverb', 'verb', 'noun']
   ];
 
   return [
