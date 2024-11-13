@@ -2,7 +2,7 @@ import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 
 class DatePicker extends StatelessWidget {
-  const DatePicker({super.key, required this.onPressed, this.selectedDate});
+  const DatePicker({super.key, required this.onPressed, required this.selectedDate});
 
   final DateTime? selectedDate;
   final void Function() onPressed;

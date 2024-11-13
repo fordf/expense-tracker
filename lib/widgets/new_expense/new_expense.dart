@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:expense_tracker/widgets/new_expense/new_expense_fields.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:expense_tracker/models/expense.dart';
@@ -40,11 +43,25 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
-  void _submitExpenseData() {
-    final submittedTitle = _titleController.text.trim();
-    final submittedAmount = double.tryParse(_amountController.text);
-    final amountIsInvalid = submittedAmount == null || submittedAmount <= 0;
-    if (submittedTitle.isEmpty || amountIsInvalid || _selectedDate == null) {
+  void _showDialog() {
+    if (Platform.isIOS) {
+      showCupertinoDialog(
+        context: context,
+        builder: (ctx) => CupertinoAlertDialog(
+          title: const Text('Invalid input'),
+          content: const Text(
+              'Please make sure a valid title, amount, and category was entered.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            )
+          ],
+        ),
+      );
+    } else {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -61,6 +78,16 @@ class _NewExpenseState extends State<NewExpense> {
           ],
         ),
       );
+    }
+  }
+
+  void _submitExpenseData() {
+    final submittedTitle = _titleController.text.trim();
+    final submittedAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = submittedAmount == null || submittedAmount <= 0;
+
+    if (submittedTitle.isEmpty || amountIsInvalid || _selectedDate == null) {
+      _showDialog();
       return;
     }
 
@@ -95,7 +122,7 @@ class _NewExpenseState extends State<NewExpense> {
               padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardHeight + 16),
               child: Column(
                 children: [
-                  if (width > 600)
+                  if (width > 600) ...[
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -105,12 +132,8 @@ class _NewExpenseState extends State<NewExpense> {
                         const SizedBox(width: 24),
                         AmountField(amountController: _amountController),
                       ],
-                    )
-                  else
-                    TitleField(titleController: _titleController),
-                  if (width > 600)
+                    ),
                     Row(
-                      // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CategoryField(
                           selectedCategory: _selectedCategory,
@@ -118,17 +141,25 @@ class _NewExpenseState extends State<NewExpense> {
                         ),
                         // const SizedBox(width: 24),
                         const Spacer(),
-                        DatePicker(onPressed: _presentDatePicker),
+                        DatePicker(
+                          onPressed: _presentDatePicker,
+                          selectedDate: _selectedDate,
+                        ),
                       ],
                     )
-                  else
+                  ] else ...[
+                    TitleField(titleController: _titleController),
                     Row(
                       children: [
                         AmountField(amountController: _amountController),
                         const SizedBox(width: 24),
-                        DatePicker(onPressed: _presentDatePicker),
+                        DatePicker(
+                          onPressed: _presentDatePicker,
+                          selectedDate: _selectedDate,
+                        ),
                       ],
                     ),
+                  ],
                   const SizedBox(height: 16),
                   Row(
                     children: [
